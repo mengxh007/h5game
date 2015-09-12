@@ -1,6 +1,5 @@
 var t = 1000
 var canvas, stage, id;
-var update = true;
 
 function handleImageLoad(event){ 
     var live = new createjs.Bitmap("asset/live.png"); live.rotation = Math.random() * 360;
@@ -14,18 +13,19 @@ function handleImageLoad(event){
    hitarea.graphics.beginFill("#000000").drawCircle(45, 45, 50);
     live.hitArea=hitarea;
     stage.addChild(live);
-            // call update on the stage to make it render the current display list to the canvas:
-	createjs.Ticker.addEventListener("tick", tick);
+
 		live.on("mousedown", function (evt) {
             var dead = new createjs.Bitmap("asset/dead.png");
             dead.rotation=evt.target.rotation;
             dead.x=live.x;dead.y=live.y;
             this.parent.addChild(dead);
             this.parent.removeChild(this);
-			update = true;
+			stage.update(evt);
 		});
-    update = true;
-setTimeout(handleImageLoad,t = 0.97 * t)}
+
+setTimeout(handleImageLoad,t = 0.97 * t);
+
+}
 
 function tick(event) {
 
@@ -35,8 +35,10 @@ function tick(event) {
 
 (function() {
     document.addEventListener('DOMContentLoaded', function() {
+
         // get a reference to the canvas we'll be working with:
         canvas = document.getElementById("testCanvas");
+
         // set canvas width
         canvas.width = window.innerWidth;
         // set canvas height
@@ -44,8 +46,9 @@ function tick(event) {
 
         // create a stage object to work with the canvas. This is the top level node in the display list:
         stage = new createjs.Stage(canvas);
+		createjs.Touch.enable(stage);
         // create a new Image object
-        
+		createjs.Ticker.addEventListener("tick", tick);        
         id=setTimeout(handleImageLoad,t = 0.97 * t);
     }, false);
 }());
