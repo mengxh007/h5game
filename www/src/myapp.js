@@ -1,56 +1,36 @@
-var canvas, stage, bg, cond=0;
-var queue = new createjs.LoadQueue(true);
+var t = 1000
+var canvas, stage, id;
+var update = true;
+
+function handleImageLoad(event){ 
+    var live = new createjs.Bitmap("asset/live.png"); live.rotation = Math.random() * 360;
+            // set bitmap x location in canvas
+    live.x = canvas.width * Math.random() + 10;
+            // set bitmap y location in canvas
+    live.y = canvas.height * Math.random() + 10;
+            // add the bitmap as a child of the stage. This means it will be drawn any time the stage is updated
+            // and that its transformations will be relative to the stage coordinates:
+    var hitarea = new createjs.Shape();
+   hitarea.graphics.beginFill("#000000").drawCircle(45, 45, 50);
+    live.hitArea=hitarea;
+    stage.addChild(live);
+            // call update on the stage to make it render the current display list to the canvas:
+	createjs.Ticker.addEventListener("tick", tick);
+		live.on("mousedown", function (evt) {
+            var dead = new createjs.Bitmap("asset/dead.png");
+            dead.rotation=evt.target.rotation;
+            dead.x=live.x;dead.y=live.y;
+            this.parent.addChild(dead);
+            this.parent.removeChild(this);
+			update = true;
+		});
+    update = true;
+setTimeout(handleImageLoad,t = 0.97 * t)}
 
 function tick(event) {
-    stage.update(event);
-}
 
-function onMousedown(evt) {
-    if(evt.target.num===0||evt.target.num==2){
-        stage.removeChild(evt.target);
-        cond+=1;
-    }
-    if(evt.target.num==1&&cond==2){
-        stage.removeChild(evt.target);
-        bg.filters = [new createjs.BlurFilter(50, 50, 0.3)];
-        bg.cache(0, 0, bg.image.width, bg.image.height);
-        bg.updateCache();
-    }
-}
+		stage.update(event);
 
-function debugLog(txt){
-    var log = new createjs.Text(txt, "20px Arial", "#ff7700");
-    log.x = 1;
-    log.y = 20;
-    log.textBaseline = "alphabetic";
-    stage.addChild(log);
-}
-
-function handleComplete(){
-    bg = new createjs.Bitmap(queue.getResult("bg1"));
-    console.log(queue.getResult("bg1"));
-    console.log(bg.image);
-    console.log(bg.image==queue.getResult("bg1"));
-    console.log(queue.getResult("bg2"));
-    console.log(bg.image==queue.getResult("bg2"));
-    bg.x = 1;
-    bg.y = 1;
-    bg.scaleX=window.innerWidth/bg.image.width;
-    bg.scaleY=window.innerHeight/bg.image.height;
-    stage.addChild(bg);
-    var coord =[{x:10,y:10},{x:15,y:15},{x:30,y:30}];
-    var obj=[];
-    for(var i=0;i<3;i++){
-        obj[i]=new createjs.Bitmap(queue.getResult("obj"+i));
-        obj[i].x=coord[i].x;
-        obj[i].y=coord[i].y;
-        obj[i].scaleX=bg.scaleX;
-        obj[i].scaleY=bg.scaleY;
-        obj[i].num=i;
-        stage.addChild(obj[i]);
-        obj[i].on("mousedown",onMousedown);
-    }
-    createjs.Ticker.addEventListener("tick", tick);
 }
 
 (function() {
@@ -64,14 +44,8 @@ function handleComplete(){
 
         // create a stage object to work with the canvas. This is the top level node in the display list:
         stage = new createjs.Stage(canvas);
-
-        queue.on("complete", handleComplete, this);
-        queue.loadManifest([
-            {id:"bg1", src:"asset/background1.jpg"},
-            {id:"bg2", src:"asset/background2.jpg"},
-            {id:"obj0", src:"asset/obj0.png"},
-            {id:"obj1", src:"asset/obj1.png"},
-            {id:"obj2", src:"asset/obj2.png"}
-        ]);
+        // create a new Image object
+        
+        id=setTimeout(handleImageLoad,t = 0.97 * t);
     }, false);
 }());
