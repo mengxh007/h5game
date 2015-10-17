@@ -4,3 +4,4 @@ intelxdk.config.ios.xml
 intelxdk.config.windows8.xml
 *.mobileprovision
 *.xdke
+.DS_Store
