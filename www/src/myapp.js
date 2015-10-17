@@ -5,9 +5,9 @@ function handleImageLoad(event) {
     var live = new createjs.Bitmap("asset/live.png");
     live.rotation = Math.random() * 360;
     // set bitmap x location in canvas
-    live.x = canvas.width * Math.random() + 10;
+    live.x = canvas.width * Math.random() - 500;
     // set bitmap y location in canvas
-    live.y = canvas.height * Math.random() + 10;
+    live.y = canvas.height * Math.random() - 500;
 
     var hitarea = new createjs.Shape();
     hitarea.graphics.beginFill("#000000").drawCircle(45, 45, 50);
